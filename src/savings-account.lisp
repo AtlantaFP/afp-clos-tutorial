@@ -30,3 +30,25 @@
 (defmethod withdraw :after ((account savings-account) amount)
   (update-savings-account-type account))
 
+(defmethod withdraw ((account savings-account) amount)
+  (print "foo. this shouldn't be called."))
+
+;;
+;; (multiple-value-prog1
+;;  (progn (most-specific-before-method args)
+;;         (least-specific-before-method args)
+;;         (most-specific-primary-method args))
+;;  (least-specific-after-method args)
+;;  (most-specific-after-method args))
+
+;;
+;; (operator (primary-method-1 args)
+;;           (primary-method-2 args)
+;;           (primary-method-3 args))
+;;
+
+;;
+;; progn, +, and, or, append, list
+
+(defmethod some-func progn ((account savings-account))
+  (print "savings account  some-func called"))
