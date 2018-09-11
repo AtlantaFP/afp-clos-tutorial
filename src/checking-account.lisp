@@ -20,12 +20,14 @@
 ;; updating account type as we deposit / withdraw money from
 ;; account.
 ;;
+
 (defun update-checking-account-type (account)
   (with-slots (%type) account
-    (cond
-      ((<= (account-balance account) 1000) (setf %type :basic))
-      ((and (> (account-balance account) 1000) (<= (account-balance account) 10000)) (setf %type :premium))
-      ((> (account-balance account) 10000) (setf %type :platinum)))))
+    (let ((balance (account-balance account)))
+        (cond
+          ((< balance 1000) (setf %type :basic))
+          ((<= 1000 balance 10000) (setf %type :premium))
+          ((> balance 10000) (setf %type :platinum))))))
 
 (defmethod initialize-instance :after ((account checking-account) &rest initargs)
   (declare (ignore initargs))
@@ -39,3 +41,10 @@
 (defmethod withdraw :after ((account checking-account) amount)
   (update-checking-account-type account))
 
+(defmethod withdraw :around ((account checking-account) amount)
+  (with-slots (%overdraft-p) account
+    (if %overdraft-p
+        (error "You already withdrew beyond your minimum balance")
+        (when (< (- (account-balance account) amount) (checking-account-minimum-balance account))
+          (setf %overdraft-p t)))
+    (call-next-method)))
