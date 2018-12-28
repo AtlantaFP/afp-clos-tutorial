@@ -1,3 +1,9 @@
+#|
+This defines the parent class for all bank account types
+and a simple API that all bank accounts can leverage. 
+We have also provided some simple default implementations
+of the methods
+|#
 (in-package #:bank-example)
 
 (defclass bank-account ()
