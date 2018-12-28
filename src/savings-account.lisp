@@ -1,10 +1,18 @@
 (in-package #:bank-example)
 
+#|
+The savings account class is a subclass of bank-account
+that provides features of checking to see if an account 
+could overdraft or not, as well as increasing the 
+amount of money in the savings account based on the 
+interest rate.
+|#
 (defclass savings-account (bank-account)
   ((%overdraft-p :initform nil :reader account-overdraft-p)
    (%savings-interest-rate :initform .05)))
 
-
+;; utilizing afp utils pretty printer to create a simple
+;; printer function
 (afp-utils:define-printer (savings-account stream)
   (format stream "~A" (account-type savings-account)))
 
